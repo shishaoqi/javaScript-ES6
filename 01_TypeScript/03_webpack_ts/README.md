@@ -1,3 +1,13 @@
+# javaScript &&  ES6
+
+## javaScript
+此笔记是针对： https://wangdoc.com/javascript/
+
+
+
+## ES6
+此笔记是针对： https://wangdoc.com/es6/
+
 ### 执行的命令
 ```
 npm init -y

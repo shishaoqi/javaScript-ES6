@@ -1,3 +1,6 @@
+import './javascript/index'
+import './ES6/index'
+
 import './01_baseType'
 import './02_numberType'
 import './03_string'
