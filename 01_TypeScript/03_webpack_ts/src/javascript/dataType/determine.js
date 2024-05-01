@@ -2,9 +2,9 @@
 /**
     JavaScript 有三种方法，可以确定一个值到底是什么类型。
 
-    1. typeof运算符
-    2. instanceof运算符
-    3. Object.prototype.toString方法
+    1. typeof 运算符
+    2. instanceof 运算符
+    3. Object.prototype.toString 方法
  */
 
 

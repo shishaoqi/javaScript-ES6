@@ -33,7 +33,7 @@ var obj = {
 obj.p(1) // 2
 
 
-// 如果属性的值还是一个对象，就形成了链式引用。
+// 如果属性的值还是一个对象，就形成了：链式引用。
 var o1 = {};
 var o2 = { bar: 'hello' };
 
@@ -66,7 +66,7 @@ o1 = 1;
 o2 // {}
 
 
-// 属性可以动态创建，不必在对象声明时就指定。
+// 属性 可以动态创建，不必在对象声明时就指定。
 var obj = {};
 obj.foo = 123;
 obj.foo // 123
@@ -75,8 +75,8 @@ obj.foo // 123
 // 属性的操作 ??? 这个居然不门清？？
 // https://wangdoc.com/javascript/types/object#%E5%B1%9E%E6%80%A7%E7%9A%84%E6%93%8D%E4%BD%9C
 // 1. 属性的读取
-// -- 读取对象的属性，有两种方法，一种是使用点运算符，还有一种
-// 是使用方括号运算符。
+// -- 读取对象的属性，有两种方法，一种是使用点运算符，
+// 还有一种是使用方括号运算符。
 var obj = {
     p: 'Hello World'
 };
@@ -87,11 +87,19 @@ obj['p'] // "Hello World" //请注意，如果使用方括号运算符，键名�
 
 // 2. 属性的赋值
 
-// 3. 属性的查看
+// 3. 属性的查看: Object.keys()
+console.log('对象的属性：', Object.keys(obj))
 
-// 4. 属性的删除
+// 4. 属性的删除：delete obj.attr
 
 // 5. 属性是否存在：in 运算符
+// in运算符的一个问题是，它不能识别哪些属性是对象自身的，哪些属性是继承的。--- obj.hasOwnProperty()
+var result;
+var obj = { p: 1 };
+result = 'p' in obj // true
+console.log('p in obj: ', result)
+result = 'toString' in obj // true
+console.log('toString in obj: ',  result)
 
 // 6. 属性的遍历：for...in 循环
 var obj = {a: 1, b: 2, c: 3};

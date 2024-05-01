@@ -46,3 +46,6 @@ node:internal/crypto/hash:68
 
 解决：
 https://stackoverflow.com/questions/69394632/webpack-build-failing-with-err-ossl-evp-unsupported
+
+
+HLS指的是流媒体视频，m3u8是一个索引文件，记录了流媒体视频的片段信息。目前大多数网络视频都是 hls 流媒体视频。通过m3u8文件下载视频片段并将其整合为mp4文件正是FetchV的m3u8下载器正在做的工作。

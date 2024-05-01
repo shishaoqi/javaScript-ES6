@@ -1,0 +1,8 @@
+import './01_boolean'
+import './02_numberType'
+import './03_string'
+import './04_undefined_null'
+import './05_array'
+import './06_enum'
+import './07_any'
+import './08_class'
