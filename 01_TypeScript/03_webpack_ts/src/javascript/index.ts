@@ -20,6 +20,8 @@ console.log('======stdlib&Obj======')
 console.log('======OOP======')
 //import './OOP/new'
 import './OOP/this'
+import './OOP/inherit'
+import './OOP/module'
 
 
 
