@@ -42,7 +42,7 @@ o1.foo.bar // "hello"
 // 上面代码中，对象o1的属性foo指向对象o2，就可以链式引用o2的属性。
 
 
-// 对象的引用
+// 对象的引用 ---------------------- 
 /**
  * 如果不同的变量名指向同一个对象，那么它们都是这个对象的引用，
  * 也就是说指向同一个内存地址。修改其中一个变量，会影响到其他所有变量。
@@ -72,7 +72,7 @@ obj.foo = 123;
 obj.foo // 123
 
 
-// 属性的操作 ??? 这个居然不门清？？
+// 属性的操作 ---------------------- ??? 这个居然不门清？？
 // https://wangdoc.com/javascript/types/object#%E5%B1%9E%E6%80%A7%E7%9A%84%E6%93%8D%E4%BD%9C
 // 1. 属性的读取
 // -- 读取对象的属性，有两种方法，一种是使用点运算符，
@@ -91,9 +91,14 @@ obj['p'] // "Hello World" //请注意，如果使用方括号运算符，键名�
 console.log('对象的属性：', Object.keys(obj))
 
 // 4. 属性的删除：delete obj.attr
+var obj = { p: 1 };
+Object.keys(obj) // ["p"]
+delete obj.p // true
+obj.p // undefined
+Object.keys(obj) // []
 
 // 5. 属性是否存在：in 运算符
-// in运算符的一个问题是，它不能识别哪些属性是对象自身的，哪些属性是继承的。--- obj.hasOwnProperty()
+// in 运算符的一个问题是，它不能识别哪些属性是对象自身的，哪些属性是继承的。--- obj.hasOwnProperty()
 var result;
 var obj = { p: 1 };
 result = 'p' in obj // true
@@ -111,3 +116,26 @@ for (var i in obj) {
 
 
 // with 语句
+// 例一
+var obj = {
+    p1: 1,
+    p2: 2,
+};
+with (obj) {
+    p1 = 4;
+    p2 = 5;
+}
+// 等同于
+obj.p1 = 4;
+obj.p2 = 5;
+
+// 例二
+with (document.links[0]){
+    console.log(href);
+    console.log(title);
+    console.log(style);
+}
+// 等同于
+console.log(document.links[0].href);
+console.log(document.links[0].title);
+console.log(document.links[0].style);

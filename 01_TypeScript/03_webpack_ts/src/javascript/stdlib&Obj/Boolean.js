@@ -1,4 +1,6 @@
 console.log('Boolean')
+console.log(Boolean(NaN))
+
 console.log('Boolean(false):', Boolean(false))
 Boolean(1) // true
 Boolean('false') // true

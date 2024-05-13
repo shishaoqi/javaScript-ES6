@@ -14,14 +14,19 @@ console.log('======dataType======')
 
 
 console.log('======stdlib&Obj======')
-//import './stdlib&Obj/Boolean'
+import './stdlib&Obj/Boolean'
+import './stdlib&Obj/Object'
 
 
 console.log('======OOP======')
 //import './OOP/new'
-import './OOP/this'
-import './OOP/inherit'
-import './OOP/module'
+// import './OOP/this'
+// import './OOP/inherit'
+// import './OOP/module'
+// import './OOP/object_funcs'
+// import './OOP/strict'
+
+
 
 
 

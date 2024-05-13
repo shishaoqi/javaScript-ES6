@@ -8,6 +8,7 @@
 
 //JavaScript 通过构造函数生成新对象，因此构造函数可以视为对象的模板。
 //实例对象的属性和方法，可以定义在构造函数内部。
+// 总结：构造函数 === 对象
 function Cat(name, color) {
     this.name = name;
     this.color = color;
@@ -19,6 +20,7 @@ function Cat(name, color) {
 var cat1 = new Cat('大毛', '白色');
 var cat2 = new Cat('二毛', '黑色');
 cat1.echoName();
+
 // --------------- 属性1 prototype ------------------
 // prototype 属性的作用 
 //(1)每个函数都有一个prototype属性，指向一个对象。
@@ -50,11 +52,69 @@ cat1.color // 'black'
 cat2.color // 'yellow'
 Animal.prototype.color // 'yellow';
 
-// ===> 总结一下，原型对象的作用，就是定义所有实例对象共享的属性和方法。这也是它被称为原型对象的原因，而实例对象可以视作从原型对象衍生出来的子对象。
+// ===> 总结一下，原型对象的作用，就是定义所有实例对象共享的属性和方法。这也是它被称为原型对象的原因，
+//而实例对象可以视作从原型对象衍生出来的子对象。
 
+//概念：原型链
+//(*)读取对象的某个属性时，JavaScript 引擎先寻找对象本身的属性，
+//如果找不到，就到它的原型去找，如果还是找不到，就到原型的原型去找。
+
+//(*)寻找属性方式是：一级级向上，在整个原型链上寻找某个属性（即：如果寻找某个不存在的属性，将会遍历整个原型链）
+var MyArray = function () {};
+MyArray.prototype = new Array();
+console.log('MyArray.prototype.constructor\'s name: ', MyArray.prototype.constructor.name);
+MyArray.prototype.constructor = MyArray;
+console.log('MyArray.prototype.constructor\'s name: ', MyArray.prototype.constructor.name);
+
+console.log('Object.getPrototypeOf(MyArray.prototype)', Object.getPrototypeOf(MyArray.prototype));
 
 // ---------------- 属性2 constructor 属性 -------------------
 
+//(1)prototype对象有一个constructor属性 ------- 默认指向prototype对象所在的构造函数
+function P() {}
+P.prototype.constructor === P // true
+//由于 constructor 属性定义在 prototype 对象上面，意味着可以被所有实例对象继承。
+var p1 = new P();
+console.log('p1.constructor === P: ', p1.constructor === P); //true
+p1.constructor === P.prototype.constructor // true
+// p1自身没有constructor属性，该属性其实是读取原型链上面的P.prototype.constructor属性
+p1.hasOwnProperty('constructor') // false 
+
+
+//(2)constructor属性的作用是，可以得知某个实例对象，到底是哪一个构造函数产生的
+function F() {};
+var f = new F();
+f.constructor === F // true
+f.constructor === RegExp // false
+
+//(3)利用 constructor 从一个实例对象新建另一个实例
+// constructor 可以 new
+function Constr() {}
+var x = new Constr();
+var y = new x.constructor();
+y instanceof Constr // true
+
+//(4)如果修改了原型对象，一般会同时修改constructor属性
+function Person(name) {
+    this.name = name;
+}
+
+Person.prototype.constructor === Person // true
+
+Person.prototype = {
+    method: function () {}
+};
+
+Person.prototype.constructor === Person // false
+Person.prototype.constructor === Object // true
+
+//(5)(若不想修改原型对象)，只在原型对象上添加方法
+Person.prototype.method = function () { console.log('change Person method') };
+
+//(6)如果不能确定constructor属性是什么函数，还有一个办法：通过name属性，从实例得到构造函数的名称
+function Foo() {}
+var f = new Foo();
+f.constructor.name // "Foo"
 
 
 
@@ -100,7 +160,7 @@ null instanceof Object // false
 
 
 //终于到继承了
-//构造函数的继承
+//------------------ 构造函数的继承 ----------------------------
 
 //(1)第一步是在子类的构造函数中，调用父类的构造函数。
 function Super(){
@@ -119,23 +179,83 @@ function Sub(value){
 Sub.prototype = Object.create(Super.prototype);
 Sub.prototype.constructor = Sub;
 Sub.prototype.method = '...';
-//上面代码中，Sub.prototype是子类的原型，要将它赋值为Object.create(Super.prototype)，
-//而不是直接等于Super.prototype。否则后面两行对Sub.prototype的操作，会连父类的原型Super.prototype一起修改掉
+//上面代码中，Sub.prototype 是子类的原型，要将它赋值为 Object.create(Super.prototype)，
+//而不是直接等于Super.prototype。否则后面两行会对 Sub.prototype 的操作，把父类的原型 Super.prototype 一起修改掉
 
 //方式二
-//另外一种写法是Sub.prototype等于一个父类实例
+//另外一种写法是 Sub.prototype 等于一个父类实例
 Sub.prototype = new Super();
 
+//举例
+//Shape构造函数
+function Shape() {
+    this.x = 0;
+    this.y = 0;
+}
+  
+Shape.prototype.move = function (x, y) {
+    this.x += x;
+    this.y += y;
+    console.info('Shape moved.');
+};
+//Rectangle构造函数继承Shape
+// 第一步，子类继承父类的实例
+function Rectangle() {
+    Shape.call(this); // 调用父类构造函数 ------------- 注意
+}
+// 第二步，子类继承父类的原型
+Rectangle.prototype = Object.create(Shape.prototype);
+Rectangle.prototype.constructor = Rectangle;
+//测试结果
+var rect = new Rectangle();
+rect instanceof Rectangle;
+rect instanceof Shape;
 
 //有时只需要单个方法的继承，这时怎么实现？
+/**
+    ClassB.prototype.print = function() {
+        ClassA.prototype.print.call(this);
+        // some code
+    }
+*/
+
 
 
 //---- 多重继承 ----
 //JavaScript 不提供多重继承功能，即不允许一个对象同时继承多个对象
-//那么如何变通来实现？？？
+//那么如何变通来实现？？？ ---- 实现方式：Mixin（混入）模式
+function M1() {
+    this.str = 'hello';
+    this.method1 = function(){
+        console.log('M1 ehco: ', this.str);
+    }
+}
 
+function M2(){
+    this.str = 'world';
+    this.method2 = function(){
+        console.log('M2 ehco: ', this.str);
+    }
+}
 
+function Ob(){
+    M1.call(this); // 调用父类构造函数
+    M2.call(this); // 调用想要继承该类的构造函数
+}
 
+console.log('before change -- Ob.prototype name: ', Ob.prototype.constructor.name);
+Ob.prototype = Object.create(M1.prototype)//继承 M1 ---- ps:这边继承的同时，也改变了 Ob.prototype.constructor
+console.log('after change -- Ob.prototype name: ', Ob.prototype.constructor.name);
+
+Object.assign(Ob.prototype, M2.prototype) // 继承链上加入 M2
+// 指定构造函数 ----（ps:我认为这是还原构造函数）
+Ob.prototype.constructor =  Ob
+console.log('after restore -- Ob.prototype name: ', Ob.prototype.constructor.name);
+
+var o = new Ob();
+o.method1()
+o.method2()
 
 // ------- 模块 -------
 // JavaScript 不是一种模块化编程语言，在传统做法中，是如何利用对象来实现模块编程的呢
+// 详情查看在本目录下的 module.js 文件
